@@ -6,7 +6,8 @@
     "scripts": {
         "build": "ncc build src/index.ts -o dist --license licenses.txt",
         "dev": "ncc build src/index.ts -o dist -w",
-        "test:unit": "vitest run tests/unit --coverage"
+        "test:unit": "vitest run tests/unit --coverage",
+        "test:integration": "vitest run tests/integration"
     },
     "dependencies": {
         "@actions/core": "^1.10.1",
