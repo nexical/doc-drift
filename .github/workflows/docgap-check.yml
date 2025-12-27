@@ -1,4 +1,4 @@
-name: Doc-Drift Check
+name: DocGap Check
 
 on:
   push:
@@ -27,16 +27,16 @@ jobs:
         run: pnpm install
 
       - name: Build Core
-        run: pnpm --filter @doc-drift/core build
+        run: pnpm --filter @docgap/core build
 
       - name: Build Action
-        run: pnpm --filter @doc-drift/action build
+        run: pnpm --filter @docgap/action build
 
-      - name: Run Doc-Drift Action (Self-Test)
+      - name: Run DocGap Action (Self-Test)
         # We run the built action script directly using node
         # This simulates the action running in the repo
         run: node apps/action/dist/index.js
         env:
           GITHUB_WORKSPACE: ${{ github.workspace }}
-          INPUT_CONFIG: .doc-drift.yaml
+          INPUT_CONFIG: .docgap.yaml
           INPUT_STRICT: false

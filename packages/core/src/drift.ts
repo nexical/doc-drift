@@ -1,4 +1,4 @@
-import { DocDriftConfig } from './config.js';
+import { DocGapConfig } from './config.js';
 import { FileCheckResult } from './types.js';
 import { getEffectiveFileUpdate } from './analysis/timestamp.js';
 import { getFileContent, getFileContentAtCommit } from './git/content.js';
@@ -7,7 +7,7 @@ import { getSemanticHash } from './analysis/hasher.js';
 export async function checkDrift(
     docPath: string,
     sourceFiles: string[],
-    config: DocDriftConfig
+    config: DocGapConfig
 ): Promise<FileCheckResult> {
     // 1. Find Last Doc Update
     const t_doc = await getEffectiveFileUpdate(docPath, config);

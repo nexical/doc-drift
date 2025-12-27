@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { runAnalysis, ConfigSchema, DocDriftConfig, CoverageAnalyzer, CoverageReport } from '@doc-drift/core';
+import { runAnalysis, ConfigSchema, DocGapConfig, CoverageAnalyzer, CoverageReport } from '@docgap/core';
 import { renderHeader, renderResults, renderMarketing, renderCoverage, spinner } from './view.js';
 import pc from 'picocolors';
 import { parse } from 'yaml';
@@ -9,7 +9,7 @@ export async function handleCheck(cwd: string, options: { config?: string; stric
     renderHeader();
 
     const root = cwd || process.cwd();
-    let config: DocDriftConfig;
+    let config: DocGapConfig;
 
     try {
         if (options.config) {
@@ -23,7 +23,7 @@ export async function handleCheck(cwd: string, options: { config?: string; stric
             }
             config = ConfigSchema.parse(json);
         } else {
-            // Let core load default (.doc-drift.yaml)
+            // Let core load default (.docgap.yaml)
             // We do nothing here, leaving config undefined so core handles it.
         }
     } catch (error: any) {

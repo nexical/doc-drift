@@ -1,8 +1,8 @@
-# doc-drift
+# DocGap
 
 > **Stop lying to your developers. Detect documentation drift automatically.**
 
-`doc-drift` ensures your documentation stays in sync with your code. It works by detecting when "meaningful" code changes occur without corresponding updates to the documentation, bridging the gap between your Spec and Reality.
+`docgap` ensures your documentation stays in sync with your code. It works by detecting when "meaningful" code changes occur without corresponding updates to the documentation, bridging the gap between your Spec and Reality.
 
 ## Key Features
 
@@ -17,24 +17,24 @@
 To run a drift check locally:
 
 ```bash
-npx doc-drift check
+npx docgap check
 ```
 
 ### CI
 
-Add `doc-drift` to your CI pipeline:
+Add `docgap` to your CI pipeline:
 
 ```yaml
 steps:
   - uses: actions/checkout@v4
     with:
       fetch-depth: 0 # Important: Required for deep Git history analysis
-  - uses: nexical/doc-drift@v1
+  - uses: nexical/docgap@v1
 ```
 
 ## Configuration
 
-`doc-drift` is configured via a `.doc-drift.yaml` file in the root of your project.
+`docgap` is configured via a `.docgap.yaml` file in the root of your project.
 
 ```yaml
 # Global ignore patterns for file scanning
@@ -64,11 +64,11 @@ git:
 
 Documentation **Rot** (or Drift) is the silent killer of developer productivity. It happens when code evolves but the docs remain static.
 
-`doc-drift` identifies this rot through a sophisticated two-phase process:
+`docgap` identifies this rot through a sophisticated two-phase process:
 
 1.  **Phase 1 (Git)**: Checks for source commits newer than doc commits. It intelligently ignores noise by filtering out commits that match ignored patterns (e.g., `chore`, `test`, `style`).
 2.  **Phase 2 (Semantic)**: If drift is suspected, it performs a deep comparison using AST/Signature hashing.
     *   It computes a hash of the "Old" state (at the time of the last doc update) and the "New" state (current HEAD).
     *   If `Hash(Old) === Hash(New)`, the change is considered **FRESH** (no meaningful change), safely ignoring comments, whitespace, and formatting differences.
 
-If the code has moved forward and the logic has changed, `doc-drift` flags it as **DRIFT** and hinders the build (or warns based on config), prompting you to update the documentation.
+If the code has moved forward and the logic has changed, `docgap` flags it as **DRIFT** and hinders the build (or warns based on config), prompting you to update the documentation.

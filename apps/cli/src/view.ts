@@ -1,6 +1,6 @@
 import pc from 'picocolors';
 import Table from 'cli-table3';
-import { FileCheckResult, CoverageReport } from '@doc-drift/core';
+import { FileCheckResult, CoverageReport } from '@docgap/core';
 import path from 'node:path';
 import ora from 'ora';
 
@@ -8,7 +8,7 @@ export const spinner = ora();
 
 export function renderHeader() {
     console.log(); // Spacing
-    spinner.start(pc.cyan('Doc-Drift: Analyzing codebase...'));
+    spinner.start(pc.cyan('DocGap: Analyzing codebase...'));
 }
 
 export function renderResults(results: FileCheckResult[], root: string, options?: { width?: number }) {
@@ -136,7 +136,7 @@ export function renderCoverage(reports: CoverageReport[], root: string) {
         '\n' +
         pc.bgBlue(
             pc.white(
-                pc.bold(' Run this command to have AI fix it: npx @doc-drift/fix fix --improve ')
+                pc.bold(' Run this command to have AI fix it: npx @docgap/fix fix --improve ')
             )
         )
     );

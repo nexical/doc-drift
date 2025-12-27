@@ -22,4 +22,4 @@ export const ConfigSchema = z.object({
     }).optional(),
 });
 
-export type DocDriftConfig = z.infer<typeof ConfigSchema>;
+export type DocGapConfig = z.infer<typeof ConfigSchema>;

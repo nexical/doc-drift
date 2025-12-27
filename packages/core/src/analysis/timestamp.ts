@@ -1,11 +1,11 @@
-import { DocDriftConfig } from '../config.js';
+import { DocGapConfig } from '../config.js';
 import { GitCommit } from '../git/types.js';
 import { getFileCommitHistory } from '../git/client.js';
 import { filterMeaningfulCommits } from '../git/filter.js';
 
 export async function getEffectiveFileUpdate(
     filePath: string,
-    config: DocDriftConfig
+    config: DocGapConfig
 ): Promise<GitCommit | null> {
     // 1. Get raw history (limit to last 20 to save speed)
     const commits = await getFileCommitHistory(filePath, {

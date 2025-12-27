@@ -28,7 +28,7 @@ The MathHelper class provides add and subtract methods.
         `);
 
         // Create config
-        await fs.writeFile(path.join(FIXTURE_DIR, '.doc-drift.yaml'), `
+        await fs.writeFile(path.join(FIXTURE_DIR, '.docgap.yaml'), `
 rules:
   - doc: utils.md
     source: utils.ts

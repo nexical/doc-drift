@@ -1,7 +1,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import pc from 'picocolors';
-import { FileCheckResult } from '@doc-drift/core';
+import { FileCheckResult } from '@docgap/core';
 
 // Mock ora using vi.hoisted to ensure it's available for the mock factory
 const { mockSpinner } = vi.hoisted(() => {

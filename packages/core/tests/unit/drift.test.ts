@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { checkDrift } from '../../src/drift.js';
-import { DocDriftConfig } from '../../src/config.js';
+import { DocGapConfig } from '../../src/config.js';
 
 // Mocks
 const { mockLog, mockShow, mockCheckIsRepo, mockReadFile } = vi.hoisted(() => ({
@@ -47,7 +47,7 @@ describe('Core Drift Check', () => {
         ignore: [],
         semantic: { enabled: true, strict: false },
         // satisfy zod types roughly (cast as any if needed or partial)
-    } as unknown as DocDriftConfig;
+    } as unknown as DocGapConfig;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -114,7 +114,7 @@ describe('Core Drift Check', () => {
     });
 
     it('Status is STALE_TIMESTAMP if semantic check disabled', async () => {
-        const noSemanticConfig = { ...config, semantic: { enabled: false } } as DocDriftConfig;
+        const noSemanticConfig = { ...config, semantic: { enabled: false } } as DocGapConfig;
 
         // Doc updated at T1
         mockLog.mockResolvedValueOnce({
@@ -131,7 +131,7 @@ describe('Core Drift Check', () => {
     });
 
     it('Status is STALE_TIMESTAMP if strict mode is ON', async () => {
-        const strictConfig = { ...config, semantic: { enabled: true, strict: true } } as DocDriftConfig;
+        const strictConfig = { ...config, semantic: { enabled: true, strict: true } } as DocGapConfig;
 
         // Doc updated at T1
         mockLog.mockResolvedValueOnce({
@@ -218,7 +218,7 @@ describe('Core Drift Check', () => {
             rules: [],
             ignore: []
             // semantic is undefined
-        } as unknown as DocDriftConfig;
+        } as unknown as DocGapConfig;
 
         // Doc updated at T1
         mockLog.mockResolvedValueOnce({

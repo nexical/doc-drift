@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as core from '@actions/core';
 import { run } from '../../src/index';
 // @ts-ignore
-import { runAnalysis, loadConfigFromPath } from '@doc-drift/core';
+import { runAnalysis, loadConfigFromPath } from '@docgap/core';
 import path from 'path';
 
 // Mock @actions/core
@@ -18,7 +18,7 @@ vi.mock('@actions/core', () => ({
 }));
 
 // Mock @doc-drift/core
-vi.mock('@doc-drift/core', () => ({
+vi.mock('@docgap/core', () => ({
     runAnalysis: vi.fn(),
     loadConfigFromPath: vi.fn(),
 }));

@@ -1,6 +1,6 @@
 # Configuration
 
-`doc-drift` is configured via a `.doc-drift.yaml` file in the root of your project. This file defines which documentation files correspond to which source files and sets global analysis rules.
+`docgap` is configured via a `.docgap.yaml` file in the root of your project. This file defines which documentation files correspond to which source files and sets global analysis rules.
 
 ## Example
 

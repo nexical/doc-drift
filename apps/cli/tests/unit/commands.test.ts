@@ -1,14 +1,14 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { handleCheck } from '../../src/commands.js';
-import { runAnalysis, ConfigSchema } from '@doc-drift/core';
+import { runAnalysis, ConfigSchema } from '@docgap/core';
 import * as view from '../../src/view.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
 // Mocks
 vi.mock('node:fs/promises');
-vi.mock('@doc-drift/core');
+vi.mock('@docgap/core');
 vi.mock('../../src/view.js');
 
 // Mock process.exit
@@ -112,7 +112,7 @@ describe('handleCheck', () => {
         vi.mocked(fs.readFile).mockResolvedValue('content');
 
         // Mock analyzer
-        const { CoverageAnalyzer } = await import('@doc-drift/core');
+        const { CoverageAnalyzer } = await import('@docgap/core');
 
         // Ensure analyze is a mock
         // Since we mocked @doc-drift/core at top level, CoverageAnalyzer should be a mock.
@@ -155,7 +155,7 @@ describe('handleCheck', () => {
         await handleCheck('/cwd', { coverage: true });
 
         // Should not crash, just skip
-        const { CoverageAnalyzer } = await import('@doc-drift/core');
+        const { CoverageAnalyzer } = await import('@docgap/core');
         expect(CoverageAnalyzer.analyze).not.toHaveBeenCalled();
     });
 
@@ -166,7 +166,7 @@ describe('handleCheck', () => {
 
         vi.mocked(fs.readFile).mockResolvedValue('content');
 
-        const { CoverageAnalyzer } = await import('@doc-drift/core');
+        const { CoverageAnalyzer } = await import('@docgap/core');
         vi.mocked(CoverageAnalyzer.analyze).mockRejectedValue(new Error('Analysis error'));
 
         await handleCheck('/cwd', { coverage: true });
@@ -182,7 +182,7 @@ describe('handleCheck', () => {
 
         vi.mocked(fs.readFile).mockResolvedValue('text');
 
-        const { CoverageAnalyzer } = await import('@doc-drift/core');
+        const { CoverageAnalyzer } = await import('@docgap/core');
         vi.mocked(CoverageAnalyzer.analyze).mockResolvedValue({
             file: 'code.ts',
             score: 0.5,

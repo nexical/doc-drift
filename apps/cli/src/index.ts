@@ -4,18 +4,18 @@ import { handleCheck } from './commands.js';
 // @ts-ignore
 import packageJson from '../package.json';
 
-const cli = cac('doc-drift');
+const cli = cac('docgap');
 
 cli
     .command('check [cwd]', 'Check documentation drift in the specified directory')
-    .option('--config <path>', 'Path to config file (default: doc-drift.config.json)')
+    .option('--config <path>', 'Path to config file (default: docgap.config.json)')
     .option('--strict', 'Exit with code 1 if any drift is detected (useful for CI/CD)')
     .option('--coverage', 'Enable coverage reporting for documented entities')
-    .example('  doc-drift check')
-    .example('  doc-drift check packages/core')
-    .example('  doc-drift check --config ./my-config.json')
-    .example('  doc-drift check --strict')
-    .example('  doc-drift check --coverage')
+    .example('  docgap check')
+    .example('  docgap check packages/core')
+    .example('  docgap check --config ./my-config.json')
+    .example('  docgap check --strict')
+    .example('  docgap check --coverage')
     .action(async (cwd, options) => {
         await handleCheck(cwd, options);
     });
@@ -23,7 +23,7 @@ cli
 // Default command alias to check for convenience (optional, but good DX)
 cli
     .command('[cwd]', 'Check documentation drift (default)')
-    .option('--config <path>', 'Path to config file (default: doc-drift.config.json)')
+    .option('--config <path>', 'Path to config file (default: docgap.config.json)')
     .option('--strict', 'Exit with code 1 if any drift is detected (useful for CI/CD)')
     .option('--coverage', 'Enable coverage reporting for documented entities')
     .action(async (cwd, options) => {
@@ -31,7 +31,7 @@ cli
         // but cac should handle explicit commands first.
         // However, having two commands claiming to handle [cwd] might be tricky in cac.
         // Let's just stick to the requested `check` command and maybe `*` usage or just rely on `check`.
-        // To be safe and strictly follow "Usage: ... npx doc-drift check", I will prioritize `check`.
+        // To be safe and strictly follow "Usage: ... npx docgap check", I will prioritize `check`.
         // But for backward compat/laziness `doc-drift` is nice.
         // Let's try to just change the main command to `check` and maybe add a fallback if I can, 
         // but for now let's just implement `check` as the primary way.

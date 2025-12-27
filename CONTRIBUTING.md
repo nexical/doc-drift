@@ -1,6 +1,6 @@
-# Contributing to doc-drift
+# Contributing to DocGap
 
-Thank you for your interest in contributing to `doc-drift`! We aim to build a high-performance, developer-friendly tool.
+Thank you for your interest in contributing to `docgap`! We aim to build a high-performance, developer-friendly tool.
 
 ## Tech Stack
 
@@ -23,8 +23,8 @@ This tool runs in CI/CD pipelines. Every millisecond counts.
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/your-org/doc-drift.git
-    cd doc-drift
+    git clone https://github.com/your-org/docgap.git
+    cd docgap
     ```
 2.  Install dependencies:
     ```bash

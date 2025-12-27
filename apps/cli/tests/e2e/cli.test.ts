@@ -37,7 +37,7 @@ describe('CLI E2E: The Lifecycle of Drift', () => {
 
         await fs.writeFile(path.join(cwd, 'src/main.ts'), 'console.log("Hello");');
         await fs.writeFile(path.join(cwd, 'docs/main.md'), '# Main Doc\n\nRefers to [main.ts](../src/main.ts).');
-        await fs.writeFile(path.join(cwd, '.doc-drift.yaml'),
+        await fs.writeFile(path.join(cwd, '.docgap.yaml'),
             `rules:
   - doc: docs/main.md
     source: src/main.ts

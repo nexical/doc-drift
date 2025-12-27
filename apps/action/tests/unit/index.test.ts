@@ -2,13 +2,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { run } from '../../src/index.js';
 import * as core from '@actions/core';
-import { runAnalysis, loadConfigFromPath } from '@doc-drift/core';
+import { runAnalysis, loadConfigFromPath } from '@docgap/core';
 import path from 'path';
 
 // Mocks
 vi.mock('@actions/core');
 vi.mock('@actions/github');
-vi.mock('@doc-drift/core');
+vi.mock('@docgap/core');
 vi.mock('path');
 
 describe('Action Run', () => {
@@ -41,7 +41,7 @@ describe('Action Run', () => {
     it('uses default config if not provided', async () => {
         vi.mocked(core.getInput).mockReturnValue('');
         await run();
-        expect(path.resolve).toHaveBeenCalledWith(expect.anything(), '.doc-drift.yaml');
+        expect(path.resolve).toHaveBeenCalledWith(expect.anything(), '.docgap.yaml');
     });
 
     it('fails if config loading fails', async () => {

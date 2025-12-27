@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import fg from 'fast-glob';
 import pLimit from 'p-limit'; // @ts-ignore
-import { ConfigSchema, DocDriftConfig } from './config.js';
+import { ConfigSchema, DocGapConfig } from './config.js';
 import { checkDrift } from './drift.js';
 import { FileCheckResult, VerificationStatus } from './types.js';
 
@@ -19,14 +19,14 @@ export * from './coverage/types.js';
 const limit = pLimit(10);
 
 /**
- * Loads configuration from doc-drift.config.json in the current working directory.
+ * Loads configuration from docgap.config.json in the current working directory.
  */
 import { parse } from 'yaml';
 
 /**
- * Loads configuration from .doc-drift.yaml in the current working directory.
+ * Loads configuration from .docgap.yaml in the current working directory.
  */
-export async function loadConfigFromPath(configPath: string): Promise<DocDriftConfig> {
+export async function loadConfigFromPath(configPath: string): Promise<DocGapConfig> {
     try {
         const content = await fs.readFile(configPath, 'utf8');
         if (configPath.endsWith('.json')) {
@@ -42,15 +42,15 @@ export async function loadConfigFromPath(configPath: string): Promise<DocDriftCo
 }
 
 /**
- * Loads configuration from .doc-drift.yaml in the current working directory.
+ * Loads configuration from .docgap.yaml in the current working directory.
  */
-async function loadConfig(cwd: string): Promise<DocDriftConfig> {
-    const configPath = path.join(cwd, '.doc-drift.yaml');
+async function loadConfig(cwd: string): Promise<DocGapConfig> {
+    const configPath = path.join(cwd, '.docgap.yaml');
     try {
         return await loadConfigFromPath(configPath);
     } catch (error) {
         // Fallback to json if needed or throw
-        const jsonPath = path.join(cwd, 'doc-drift.config.json');
+        const jsonPath = path.join(cwd, 'docgap.config.json');
         try {
             return await loadConfigFromPath(jsonPath);
         } catch {
@@ -67,7 +67,7 @@ async function loadConfig(cwd: string): Promise<DocDriftConfig> {
  * @param cwd Current working directory
  * @param config Optional configuration object. If not provided, loads from default path.
  */
-export async function runAnalysis(cwd: string, config?: DocDriftConfig): Promise<FileCheckResult[]> {
+export async function runAnalysis(cwd: string, config?: DocGapConfig): Promise<FileCheckResult[]> {
     if (!config) {
         config = await loadConfig(cwd);
     }

@@ -1,11 +1,11 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import path from 'path';
-import { runAnalysis, loadConfigFromPath, FileCheckResult } from '@doc-drift/core';
+import { runAnalysis, loadConfigFromPath, FileCheckResult } from '@docgap/core';
 
 export async function run() {
     try {
-        const configPathInput = core.getInput('config') || '.doc-drift.yaml';
+        const configPathInput = core.getInput('config') || '.docgap.yaml';
         const strict = core.getInput('strict') === 'true';
 
         const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
@@ -49,7 +49,7 @@ export async function run() {
 
         if (hasDrift) {
             core.startGroup('🔧 How to Fix');
-            core.info('Run npx doc-drift fix to update automatically.');
+            core.info('Run npx docgap fix to update automatically.');
             core.endGroup();
 
             if (strict) {

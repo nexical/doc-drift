@@ -1,5 +1,5 @@
 {
-  "name": "doc-drift",
+  "name": "docgap",
   "scripts": {
     "build": "pnpm -r build",
     "test:unit": "vitest run tests/unit --coverage",

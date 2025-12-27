@@ -1,10 +1,10 @@
 {
-    "name": "@doc-drift/cli",
+    "name": "@docgap/cli",
     "version": "0.1.0",
-    "description": "CLI for Doc-Drift",
+    "description": "CLI for DocGap",
     "type": "module",
     "bin": {
-        "doc-drift": "./dist/index.js"
+        "docgap": "./dist/index.js"
     },
     "files": [
         "dist"
@@ -22,7 +22,7 @@
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "@doc-drift/core": "workspace:*",
+        "@docgap/core": "workspace:*",
         "cac": "^6.7.14",
         "cli-table3": "^0.6.3",
         "ora": "^8.0.0",

@@ -1,6 +1,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { runAnalysis, loadConfigFromPath, DocDriftConfig } from '../../src/index.js';
+import { runAnalysis, loadConfigFromPath, DocGapConfig } from '../../src/index.js';
 import { checkDrift } from '../../src/drift.js';
 import fg from 'fast-glob';
 import fs from 'node:fs/promises';
@@ -24,7 +24,7 @@ rules:
 git:
   shallow: true
 `);
-            const config = await loadConfigFromPath('/path/to/.doc-drift.yaml');
+            const config = await loadConfigFromPath('/path/to/.docgap.yaml');
             expect(config.rules).toHaveLength(1);
             expect(config.git?.shallow).toBe(true);
         });
@@ -33,7 +33,7 @@ git:
             vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 rules: [{ doc: 'a', source: 'b' }]
             }));
-            const config = await loadConfigFromPath('/path/to/doc-drift.config.json');
+            const config = await loadConfigFromPath('/path/to/docgap.config.json');
             expect(config.rules).toHaveLength(1);
         });
 
@@ -54,7 +54,7 @@ git:
                     { doc: 'docs/*.md', source: 'src/*.ts', maxStaleness: 0 }
                 ],
                 ignore: ['node_modules'],
-            } as DocDriftConfig;
+            } as DocGapConfig;
 
             vi.mocked(fg).mockResolvedValueOnce(['/abs/docs/1.md', '/abs/docs/2.md']); // doc files
             vi.mocked(fg).mockResolvedValue(['/abs/src/1.ts']); // source files (called twice)

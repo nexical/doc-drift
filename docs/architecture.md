@@ -1,6 +1,6 @@
 # Architecture
 
-This document outlines the internal design and structural decisions of `doc-drift`. The architecture prioritizes speed ("Cold start speed") and monorepo compatibility.
+This document outlines the internal design and structural decisions of `docgap`. The architecture prioritizes speed ("Cold start speed") and monorepo compatibility.
 
 ## Monorepo Structure
 
@@ -31,7 +31,7 @@ The codebase is organized as a pnpm workspace with three primary components:
 
 ## The Algorithm
 
-`doc-drift` determines documentation freshness through a two-phase process:
+`docgap` determines documentation freshness through a two-phase process:
 
 ### Phase 1: Temporal Analysis (Git)
 The first pass relies on `git log` to establish a timeline.

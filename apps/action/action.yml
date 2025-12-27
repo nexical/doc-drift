@@ -1,9 +1,9 @@
-name: 'Doc-Drift Check'
+name: 'DocGap Check'
 description: 'Detect stale documentation in your Pull Requests.'
 inputs:
   config:
     description: 'Path to config file'
-    default: '.doc-drift.yaml'
+    default: '.docgap.yaml'
   strict:
     description: 'Fail build on drift'
     default: 'false'
