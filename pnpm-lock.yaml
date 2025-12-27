@@ -14,7 +14,7 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       simple-git:
-        specifier: ^3.21.0
+        specifier: ^3.30.0
         version: 3.30.0
       zod:
         specifier: ^3.22.4
