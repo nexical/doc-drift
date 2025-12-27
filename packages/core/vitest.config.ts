@@ -13,8 +13,8 @@ export default defineConfig({
                 statements: 100,
             },
             include: ['src/**/*.ts'],
-            exclude: ['src/types.ts', 'src/**/types.ts', '**/coverage/**'],
+            exclude: ['src/types.ts', 'src/**/types.ts', 'coverage/**'],
         },
-        exclude: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/.git/**'],
+        exclude: ['**/node_modules/**', '**/dist/**', './coverage/**', '**/.git/**'],
     },
 });

@@ -18,6 +18,8 @@ lerna-debug.log*
 
 # Testing
 coverage/
+!packages/core/src/coverage/
+!packages/core/tests/unit/coverage/
 *.lcov
 .nyc_output
 

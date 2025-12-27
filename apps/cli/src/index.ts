@@ -10,10 +10,12 @@ cli
     .command('check [cwd]', 'Check documentation drift in the specified directory')
     .option('--config <path>', 'Path to config file (default: doc-drift.config.json)')
     .option('--strict', 'Exit with code 1 if any drift is detected (useful for CI/CD)')
+    .option('--coverage', 'Enable coverage reporting for documented entities')
     .example('  doc-drift check')
     .example('  doc-drift check packages/core')
     .example('  doc-drift check --config ./my-config.json')
     .example('  doc-drift check --strict')
+    .example('  doc-drift check --coverage')
     .action(async (cwd, options) => {
         await handleCheck(cwd, options);
     });
@@ -23,6 +25,7 @@ cli
     .command('[cwd]', 'Check documentation drift (default)')
     .option('--config <path>', 'Path to config file (default: doc-drift.config.json)')
     .option('--strict', 'Exit with code 1 if any drift is detected (useful for CI/CD)')
+    .option('--coverage', 'Enable coverage reporting for documented entities')
     .action(async (cwd, options) => {
         // If cwd matches a command name (like 'check' if we didn't define it before), it would be an issue,
         // but cac should handle explicit commands first.

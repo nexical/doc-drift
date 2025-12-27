@@ -6,9 +6,14 @@ import { ConfigSchema, DocDriftConfig } from './config.js';
 import { checkDrift } from './drift.js';
 import { FileCheckResult, VerificationStatus } from './types.js';
 
-export * from './types.js';
+export * from './drift.js';
 export * from './config.js';
-export * from './drift.js'; // Export core logic for direct usage
+export * from './types.js';
+export * from './git/filter.js';
+export * from './analysis/hasher.js';
+export * from './coverage/analyzer.js';
+export * from './coverage/types.js';
+// Export core logic for direct usage
 
 // Limit concurrency to 10
 const limit = pLimit(10);

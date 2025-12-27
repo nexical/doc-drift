@@ -5,7 +5,9 @@ export default defineConfig({
     test: {
         coverage: {
             exclude: [
-                '**/coverage/**',
+                'coverage/**',
+                'packages/*/coverage/**',
+                'apps/*/coverage/**',
                 '**/dist/**',
                 '**/node_modules/**',
                 '**/*.d.ts',
@@ -15,7 +17,9 @@ export default defineConfig({
             ],
         },
         exclude: [
-            '**/coverage/**',
+            'coverage/**',
+            'packages/*/coverage/**',
+            'apps/*/coverage/**',
             '**/dist/**',
             '**/node_modules/**'
         ],

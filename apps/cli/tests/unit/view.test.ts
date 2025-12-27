@@ -127,7 +127,6 @@ describe('View Layer', () => {
         it('shows fix command if stale files exist', () => {
             renderMarketing({ total: 5, stale: 2 });
             expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Found 2 drifting files'));
-            expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('npx @doc-drift/fix fix'));
         });
     });
 });

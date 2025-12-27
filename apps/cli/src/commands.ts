@@ -1,11 +1,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { runAnalysis, ConfigSchema, DocDriftConfig } from '@doc-drift/core';
-import { renderHeader, renderResults, renderMarketing, spinner } from './view.js';
+import { runAnalysis, ConfigSchema, DocDriftConfig, CoverageAnalyzer, CoverageReport } from '@doc-drift/core';
+import { renderHeader, renderResults, renderMarketing, renderCoverage, spinner } from './view.js';
 import pc from 'picocolors';
 import { parse } from 'yaml';
 
-export async function handleCheck(cwd: string, options: { config?: string; strict?: boolean }) {
+export async function handleCheck(cwd: string, options: { config?: string; strict?: boolean; coverage?: boolean }) {
     renderHeader();
 
     const root = cwd || process.cwd();
@@ -36,6 +36,41 @@ export async function handleCheck(cwd: string, options: { config?: string; stric
         const results = await runAnalysis(root, config); // config might be undefined
 
         renderResults(results, root);
+
+        if (options.coverage) {
+            spinner.start(pc.cyan('Calculating coverage...'));
+            const reports: CoverageReport[] = [];
+
+            for (const res of results) {
+                // Read doc content
+                // Note: runAnalysis already reads files but doesn't return contents in result.
+                // We re-read here. Performance hit acceptable for CLI reporting.
+                let docContent = '';
+                try {
+                    docContent = await fs.readFile(res.docPath, 'utf8');
+                } catch {
+                    // If doc missing (shouldn't happen if validation passed), skip
+                    continue;
+                }
+
+                for (const sourceFile of res.sourceFiles) {
+                    try {
+                        const report = await CoverageAnalyzer.analyze(sourceFile, docContent);
+                        // Only include if we got a valid score/profile (implied if score > 0 or present/missing exist, 
+                        // but analyzer returns score 0 for no profile. We should probably filter those out or show as N/A?)
+                        // Analyzer returns score 0 and empty missing/present for no profile.
+                        // Let's filter out "empty" reports to avoid cluttering "unknown" files
+                        if (report.missing.length > 0 || report.present.length > 0) {
+                            reports.push(report);
+                        }
+                    } catch (e) {
+                        // Ignore errors in coverage analysis for single file
+                    }
+                }
+            }
+            spinner.stop();
+            renderCoverage(reports, root);
+        }
 
         const staleCount = results.filter((r) => r.status === 'STALE_TIMESTAMP' || r.status === 'STALE_SEMANTIC').length;
         renderMarketing({ total: results.length, stale: staleCount });

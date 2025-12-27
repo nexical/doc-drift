@@ -1,6 +1,6 @@
 import pc from 'picocolors';
 import Table from 'cli-table3';
-import { FileCheckResult } from '@doc-drift/core';
+import { FileCheckResult, CoverageReport } from '@doc-drift/core';
 import path from 'node:path';
 import ora from 'ora';
 
@@ -89,18 +89,62 @@ function renderTableView(results: FileCheckResult[], root: string) {
     console.log(table.toString());
 }
 
+export function renderCoverage(reports: CoverageReport[], root: string) {
+    if (reports.length === 0) {
+        console.log(pc.gray('\nNo coverage data available for checked files.'));
+        return;
+    }
+
+    console.log(pc.bold(pc.white('\nCoverage Report:')));
+
+    const table = new Table({
+        head: [pc.white(pc.bold('File')), pc.white(pc.bold('Coverage')), pc.white(pc.bold('Missing Entities'))],
+        wordWrap: true,
+        wrapOnWordBoundary: false
+    });
+
+    let totalScore = 0;
+
+    reports.forEach(report => {
+        const relativeFile = path.relative(root, report.file);
+        const percentage = Math.round(report.score * 100);
+        let coverageText = `${percentage}%`;
+
+        if (percentage >= 80) coverageText = pc.green(coverageText);
+        else if (percentage >= 50) coverageText = pc.yellow(coverageText);
+        else coverageText = pc.red(coverageText);
+
+        const missingText = report.missing.length > 0
+            ? report.missing.map(e => e.name).slice(0, 5).join(', ') + (report.missing.length > 5 ? '...' : '')
+            : pc.green('None');
+
+        table.push([
+            pc.cyan(relativeFile),
+            coverageText,
+            pc.gray(missingText)
+        ]);
+
+        totalScore += report.score;
+    });
+
+    console.log(table.toString());
+
+    const avgCoverage = Math.round((totalScore / reports.length) * 100);
+    console.log(pc.bold(`Total Coverage: ${avgCoverage}%`));
+
+    console.log(
+        '\n' +
+        pc.bgBlue(
+            pc.white(
+                pc.bold(' Run this command to have AI fix it: npx @doc-drift/fix fix --improve ')
+            )
+        )
+    );
+}
+
 export function renderMarketing(stats: { total: number; stale: number }) {
     if (stats.stale > 0) {
         console.log('\n' + pc.yellow(`[!] Found ${stats.stale} drifting files.`));
-        console.log(
-            '\n' +
-            pc.bgBlue(
-                pc.white(
-                    pc.bold(' Fix these issues automatically with AI? Run: npx @doc-drift/fix fix ')
-                )
-            ) +
-            '\n'
-        );
     } else {
         console.log('\n' + pc.green('✨ All documentation is up to date!'));
     }
