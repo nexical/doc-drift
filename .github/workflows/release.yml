@@ -34,7 +34,7 @@ jobs:
       # we can try to publish and fail gracefully if version exists, or check version.
       # For now, we will just attempt publish.
       - name: Publish CLI
-        if: github.repository == 'doc-drift/doc-drift' # Replace with actual repo if known, good safety
+        if: github.repository == 'nexical/docgap' # Replace with actual repo if known, good safety
         run: |
           cd apps/cli
           npm publish --access public
