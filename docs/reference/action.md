@@ -42,3 +42,16 @@ jobs:
 1.  **Drift Detection**: It scans your files based on `.docgap.yaml`.
 2.  **PR Comments**: If drift is found, it posts a detailed comment on the Pull Request listing the stale files.
 3.  **Annotations**: It adds file-level annotations to the "Files Changed" tab in GitHub, highlighting exactly which files are out of sync.
+
+## Internals
+
+### Implementation
+The Action is defined in `apps/action/action.yml` and implemented in `apps/action/src/index.ts`.
+
+The `run` function is the entry point. It:
+1. Reads inputs using `core.getInput`.
+2. Loads the configuration.
+3. Runs the analysis.
+4. Uses `core.setFailed` if drift is detected (and strict mode is on).
+5. Provides annotations for the PR diff view.
+

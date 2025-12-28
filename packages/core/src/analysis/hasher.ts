@@ -21,10 +21,24 @@ export async function normalizeViaRepomix(content: string, extension: string): P
             output: {
                 compress: true,
                 style: 'xml',
+                filePath: 'repomix-output.xml',
                 fileSummary: false,
                 directoryStructure: false,
                 removeComments: true,
                 removeEmptyLines: true,
+            },
+            include: [],
+            ignore: {
+                useGitignore: true,
+                useDotIgnore: true,
+                useDefaultPatterns: true,
+                customPatterns: [],
+            },
+            security: {
+                enableSecurityCheck: false,
+            },
+            tokenCount: {
+                encoding: 'o200k_base',
             },
             cwd: tempDir,
         };
