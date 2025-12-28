@@ -12,62 +12,62 @@ rules:
   - doc: "README.md"
     source: "README.md"
 
-  - doc: "docs/configuration.md"
+  - doc: "docs/guide/configuration.md"
     source:
       - ".docgap.yaml"
       - "packages/core/src/config.ts"
 
   # Group 2: Core Architecture
-  - doc: "docs/architecture.md"
+  - doc: "docs/core/architecture.md"
     source:
       - "packages/core/src/index.ts"
       - "packages/core/src/types.ts"
 
-  - doc: "docs/drift-detection.md"
+  - doc: "docs/core/drift-detection.md"
     source: "packages/core/src/drift.ts"
 
-  - doc: "docs/git-analysis.md"
+  - doc: "docs/core/git-analysis.md"
     source:
       - "packages/core/src/git/client.ts"
       - "packages/core/src/git/content.ts"
       - "packages/core/src/git/filter.ts"
       - "packages/core/src/git/types.ts"
 
-  - doc: "docs/hashing-and-timestamps.md"
+  - doc: "docs/core/hashing.md"
     source:
       - "packages/core/src/analysis/hasher.ts"
       - "packages/core/src/analysis/timestamp.ts"
 
-  - doc: "docs/coverage-analysis.md"
+  - doc: "docs/core/coverage.md"
     source:
       - "packages/core/src/coverage/analyzer.ts"
       - "packages/core/src/coverage/languages.ts"
       - "packages/core/src/coverage/types.ts"
 
   # Group 3: User Interfaces
-  - doc: "docs/cli-reference.md"
+  - doc: "docs/reference/cli.md"
     source:
       - "apps/cli/src/index.ts"
       - "apps/cli/src/commands.ts"
       - "apps/cli/src/view.ts"
 
-  - doc: "docs/github-action.md"
+  - doc: "docs/reference/action.md"
     source:
       - "apps/action/action.yml"
       - "apps/action/src/index.ts"
 
   # Group 4: Developer Guide
-  - doc: "CONTRIBUTING.md"
+  - doc: "docs/meta/contributing.md"
     source:
-      - "CONTRIBUTING.md"
+      - "docs/meta/contributing.md"
       - "pnpm-workspace.yaml"
 
-  - doc: "docs/releasing.md"
+  - doc: "docs/meta/releasing.md"
     source:
-      - "docs/releasing.md"
+      - "docs/meta/releasing.md"
       - ".github/workflows/release.yml"
 
-  - doc: "docs/testing.md"
+  - doc: "docs/meta/testing.md"
     source:
       - "vitest.workspace.ts"
       - "vitest.config.ts"
@@ -75,7 +75,7 @@ rules:
       - "apps/cli/tests/**/*"
       - "apps/action/tests/**/*"
 
-  - doc: "docs/build-config.md"
+  - doc: "docs/meta/build.md"
     source:
       - "packages/core/tsconfig.build.json"
       - "apps/cli/tsup.config.ts"
