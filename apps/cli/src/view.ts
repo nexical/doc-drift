@@ -116,7 +116,7 @@ function renderTableView(results: FileCheckResult[], root: string) {
     console.log(table.toString());
 }
 
-export function renderCoverage(reports: CoverageReport[], root: string) {
+export function renderCoverage(reports: CoverageReport[], root: string, options?: { width?: number }) {
     if (reports.length === 0) {
         console.log(pc.gray('\nNo coverage data available for checked files.'));
         return;
@@ -124,13 +124,63 @@ export function renderCoverage(reports: CoverageReport[], root: string) {
 
     console.log(pc.bold(pc.white('\nCoverage Report:')));
 
+    const width = options?.width || process.stdout.columns || 80;
+    const isNarrow = width < 100;
+
+    if (isNarrow) {
+        renderCoverageListView(reports, root);
+    } else {
+        renderCoverageTableView(reports, root);
+    }
+
+    const totalScore = reports.reduce((acc, curr) => acc + curr.score, 0);
+    const avgCoverage = Math.round((totalScore / reports.length) * 100);
+    console.log(pc.bold(`Total Coverage: ${avgCoverage}%`));
+
+    console.log(
+        '\n' +
+        pc.bgBlue(
+            pc.white(
+                pc.bold(' Run this command to have AI fix it: npx @docgap/fix fix --improve ')
+            )
+        )
+    );
+}
+
+function renderCoverageListView(reports: CoverageReport[], root: string) {
+    console.log(pc.dim('─'.repeat(50)));
+    reports.forEach(report => {
+        const relativeFile = path.relative(root, report.file);
+        const percentage = Math.round(report.score * 100);
+
+        let icon = '✅';
+        let colorFunc = pc.green;
+
+        if (percentage < 50) {
+            icon = '❌';
+            colorFunc = pc.red;
+        } else if (percentage < 80) {
+            icon = '⚠️ ';
+            colorFunc = pc.yellow;
+        }
+
+        console.log(`${icon} ${colorFunc(`${percentage}%`)}  ${pc.bold(pc.cyan(relativeFile))}`);
+
+        const missingText = report.missing.length > 0
+            ? report.missing.map(e => e.name).slice(0, 5).join(', ') + (report.missing.length > 5 ? '...' : '')
+            : pc.italic(pc.dim('None'));
+
+        console.log(`   ${pc.dim('Missing:')} ${missingText}`);
+        console.log(pc.dim('─'.repeat(50)));
+    });
+}
+
+function renderCoverageTableView(reports: CoverageReport[], root: string) {
     const table = new Table({
         head: [pc.white(pc.bold('File')), pc.white(pc.bold('Coverage')), pc.white(pc.bold('Missing Entities'))],
         wordWrap: true,
         wrapOnWordBoundary: false
     });
-
-    let totalScore = 0;
 
     reports.forEach(report => {
         const relativeFile = path.relative(root, report.file);
@@ -150,23 +200,9 @@ export function renderCoverage(reports: CoverageReport[], root: string) {
             coverageText,
             pc.gray(missingText)
         ]);
-
-        totalScore += report.score;
     });
 
     console.log(table.toString());
-
-    const avgCoverage = Math.round((totalScore / reports.length) * 100);
-    console.log(pc.bold(`Total Coverage: ${avgCoverage}%`));
-
-    console.log(
-        '\n' +
-        pc.bgBlue(
-            pc.white(
-                pc.bold(' Run this command to have AI fix it: npx @docgap/fix fix --improve ')
-            )
-        )
-    );
 }
 
 export function renderMarketing(stats: { total: number; stale: number }) {
