@@ -1,13 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { checkDrift } from '../../src/drift.js';
 import { DocGapConfig } from '../../src/config.js';
+import { getSemanticHash } from '../../src/analysis/hasher.js';
 
 // Mocks
-const { mockLog, mockShow, mockCheckIsRepo, mockReadFile } = vi.hoisted(() => ({
+const { mockLog, mockShow, mockCheckIsRepo, mockReadFile, mockGetSemanticHash } = vi.hoisted(() => ({
     mockLog: vi.fn(),
     mockShow: vi.fn(),
     mockCheckIsRepo: vi.fn(),
     mockReadFile: vi.fn(),
+    mockGetSemanticHash: vi.fn(),
+}));
+
+vi.mock('../../src/analysis/hasher.js', () => ({
+    getSemanticHash: mockGetSemanticHash,
+    normalizeViaRepomix: vi.fn(),
 }));
 
 vi.mock('simple-git', () => ({
@@ -52,6 +59,8 @@ describe('Core Drift Check', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockCheckIsRepo.mockResolvedValue(true);
+        // Default simple hash behavior
+        mockGetSemanticHash.mockImplementation(async (content: string) => `hash_${content.trim()}`);
     });
 
     it('Status is FRESH if code is older than doc', async () => {
@@ -83,6 +92,9 @@ describe('Core Drift Check', () => {
 
         // Content at T2 (Current FS)
         mockReadFile.mockResolvedValue('function foo() {   return 1;   }'); // formatting change only
+
+        // Explicitly mock same hash for these calls
+        mockGetSemanticHash.mockResolvedValue('hash_same');
 
         const result = await checkDrift('doc.md', ['code.ts'], config);
 
@@ -182,6 +194,9 @@ describe('Core Drift Check', () => {
 
         // Expectation: Semantically the code is: function foo() { return 1; }
         // So statuses should match.
+
+        // Explicitly mock match
+        mockGetSemanticHash.mockResolvedValue('hash_match_comments_diff');
 
         const result = await checkDrift('doc.md', ['code.ts'], config);
 

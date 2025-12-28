@@ -1,0 +1,107 @@
+# DocGap Configuration Guide for AI Models
+
+This file contains instructions and context for AI models (like ChatGPT, Claude, Gemini) to generate valid `.docgap.yaml` configuration files for the DocGap tool.
+
+## Context
+DocGap is a tool that tracks "Documentation Drift". It verifies that documentation files are in sync with the source code they describe. It does this by mapping a documentation file (`doc`) to one or more source files (`source`).
+
+## Objective
+Your goal is to help the user generate a `.docgap.yaml` file that accurately maps their project structure.
+
+## Configuration Schema
+
+The configuration is a YAML file with the following structure:
+
+```yaml
+# Global Ignore Patterns (Optional)
+# Files matching these patterns are ignored during file discovery.
+ignore:
+  - "node_modules"
+  - "dist"
+  - "**/*.test.ts"
+
+# Drift Detection Rules (Required)
+rules:
+  - doc: "docs/api/user.md"          # Path to the documentation file
+    source: "src/user/service.ts"    # Path(s) to the source code it describes
+  
+  - doc: "docs/guide/auth.md"
+    source:                          # Can be an array of files
+      - "src/auth/login.ts"
+      - "src/auth/register.ts"
+    maxStaleness: 10                 # Optional: Allowed drift in minutes (default 0)
+
+# Git Settings (Optional)
+git:
+  # Regex to ignore commit messages (e.g. "chore:", "fix typo")
+  ignorePatterns: "^(chore|style|test):" 
+
+# Semantic Analysis Settings (Optional)
+semantic:
+  enabled: true       # Enable smart semantic hashing (default true)
+  strict: false       # If true, any change triggers drift. If false, only semantic changes trigger it.
+```
+
+## Mapping Strategy (How to Think)
+
+When analyzing a user's codebase to generate this file, follow these steps:
+
+1.  **Identify Documentation**: Look for `.md` or `.mdx` files in `docs/`, `guides/`, or the root `README.md`.
+2.  **Identify Source Code**: Look for the implementation files (`.ts`, `.js`, `.py`, `.go`, etc.) that correspond to the documentation topics.
+3.  **Create Mappings**:
+    *   **1-to-1**: If `docs/utils.md` describes `src/utils.ts`, map them directly.
+    *   **1-to-Many**: If `docs/auth.md` describes the entire Auth system, map it to all relevant files in `src/auth/*.ts`.
+    *   **Root**: Usually `README.md` describes the entry point (e.g., `src/index.ts` or `src/main.ts`).
+4.  **Exclusions**: Ensure `node_modules`, `dist`, `coverage`, and test files are ignored unless the documentation is specifically *about* testing.
+
+## Examples
+
+### 1. Simple Library
+A small project with a single entry point.
+
+```yaml
+ignore: ["node_modules", "dist", "**/*.test.ts"]
+
+rules:
+  - doc: "README.md"
+    source: ["src/index.ts", "src/lib.ts"]
+```
+
+### 2. Monorepo (Advanced)
+A repository with multiple packages.
+
+```yaml
+ignore: ["**/node_modules", "**/dist", "**/.turbo"]
+
+rules:
+  # Core Package
+  - doc: "packages/core/README.md"
+    source: "packages/core/src/index.ts"
+  
+  # CLI Application
+  - doc: "apps/cli/README.md"
+    source: ["apps/cli/src/main.ts", "apps/cli/src/commands/*.ts"]
+    
+  # API Documentation
+  - doc: "docs/api/endpoints.md"
+    source: 
+      - "apps/api/src/routes/users.ts"
+      - "apps/api/src/routes/posts.ts"
+```
+
+### 3. Strict Mode
+For critical documentation that must update with *every* typo fix.
+
+```yaml
+semantic:
+  strict: true
+
+rules:
+  - doc: "SECURITY.md"
+    source: "src/security/policy.ts"
+```
+
+## Prompt for the User
+If you (the User) want to generate a config, paste this entire file into your AI chat and add:
+
+> "Here is the file structure of my project: [PASTE TREE OUTPUT]. Please generate a .docgap.yaml configuration file for me based on the guide above."

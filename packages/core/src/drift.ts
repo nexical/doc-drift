@@ -52,8 +52,8 @@ export async function checkDrift(
                 // We compare against the state of the code when the doc was last updated.
                 const sourceOld = await getFileContentAtCommit(sourceFile, t_doc.hash);
 
-                const sigCurrent = getSemanticHash(sourceCurrent);
-                const sigOld = getSemanticHash(sourceOld);
+                const sigCurrent = await getSemanticHash(sourceCurrent, '.' + (sourceFile.split('.').pop() || 'ts'));
+                const sigOld = await getSemanticHash(sourceOld, '.' + (sourceFile.split('.').pop() || 'ts'));
 
                 if (sigCurrent === sigOld) {
                     // Match -> FRESH (False alarm, only formatting changed)

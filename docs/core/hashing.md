@@ -6,13 +6,13 @@ Reviewing the mechanism behind "Semantic Drift Detection".
 The `getSemanticHash` function in `packages/core/src/analysis/hasher.ts` is responsible for generating a unique fingerprint of a file's "meaningful" content.
 
 ### Cleaning Content
-Before hashing, the content is passed through `cleanContent`. This function:
-1. Removes block comments `/* ... */`.
-2. Removes line comments `// ...` (while preserving URLs).
-3. Normalizes whitespace (collapsing multiple spaces and newlines into single spaces).
-4. Trims the result.
+Before hashing, the content is normalized using `normalizeViaRepomix`. This function leverages the [Repomix](https://github.com/yamadashy/repomix) library to compress the code structure.
 
-This ensures that formatting changes, comment updates, or refactors that don't change the logic code do not trigger a drift alert.
+1. It writes the content to a temporary file.
+2. It runs `repomix` with the `compress` option enabled.
+3. This process strips comments, extraneous whitespace, and reducing the code to its structural elements (while preserving logic signatures).
+
+This ensures that formatting changes, comment updates, or refactors that don't change the structural logic do not trigger a drift alert.
 
 ### Hashing
 We use `createHash('sha256')` to generate the final hex digest of the cleaned content.

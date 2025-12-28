@@ -1,11 +1,12 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
+    base: '/docgap/',
     title: "DocGap",
     description: "Stop lying to your developers.",
     themeConfig: {
         nav: [
-            { text: 'Guide', link: '/guide/configuration' },
+            { text: 'Guide', link: '/guide/getting-started' },
             { text: 'Core Architecture', link: '/core/architecture' },
             { text: 'Reference', link: '/reference/cli' },
             { text: 'GitHub', link: 'https://github.com/nexical/docgap' }
@@ -15,6 +16,7 @@ export default defineConfig({
             {
                 text: 'Guide',
                 items: [
+                    { text: 'Getting Started', link: '/guide/getting-started' },
                     { text: 'Configuration', link: '/guide/configuration' }
                 ]
             },

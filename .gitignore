@@ -44,3 +44,7 @@ coverage/
 .turbo
 junit.xml
 test-results/
+
+# VitePress
+docs/.vitepress/dist
+docs/.vitepress/cache
