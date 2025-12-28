@@ -136,15 +136,6 @@ export function renderCoverage(reports: CoverageReport[], root: string, options?
     const totalScore = reports.reduce((acc, curr) => acc + curr.score, 0);
     const avgCoverage = Math.round((totalScore / reports.length) * 100);
     console.log(pc.bold(`Total Coverage: ${avgCoverage}%`));
-
-    console.log(
-        '\n' +
-        pc.bgBlue(
-            pc.white(
-                pc.bold(' Run this command to have AI fix it: npx @docgap/fix fix --improve ')
-            )
-        )
-    );
 }
 
 function renderCoverageListView(reports: CoverageReport[], root: string) {

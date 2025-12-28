@@ -1,29 +1,82 @@
 ignore:
-  - "node_modules"
-  - "dist"
-  - ".git"
-
-rules:
-  # Rule 1: Architecture tracks core logic
-  - doc: "docs/architecture.md"
-    source: "packages/core/src/**/*.ts"
-
-  # Rule 2: Configuration tracks the config definition
-  - doc: "docs/configuration.md"
-    source: "packages/core/src/config.ts"
-
-  # Rule 3: README tracks the core detection logic and hashing algorithm
-  # Rationale: If the core detection logic or hashing algorithm changes, the main documentation implies a change in behavior/features and should be flagged.
-  - doc: "README.md"
-    source: 
-      - "packages/core/src/drift.ts"
-      - "packages/core/src/analysis/hasher.ts"
-
-git:
-  ignoreCommitPatterns:
-    - "^chore:"
-    - "^style:"
-    - "^ci:"
+  - node_modules
+  - dist
+  - .git
 
 semantic:
   enabled: true
+  strict: false
+
+rules:
+  # Group 1: Getting Started
+  - doc: "README.md"
+    source: "README.md"
+
+  - doc: "docs/configuration.md"
+    source:
+      - ".docgap.yaml"
+      - "packages/core/src/config.ts"
+
+  # Group 2: Core Architecture
+  - doc: "docs/architecture.md"
+    source:
+      - "packages/core/src/index.ts"
+      - "packages/core/src/types.ts"
+
+  - doc: "docs/drift-detection.md"
+    source: "packages/core/src/drift.ts"
+
+  - doc: "docs/git-analysis.md"
+    source:
+      - "packages/core/src/git/client.ts"
+      - "packages/core/src/git/content.ts"
+      - "packages/core/src/git/filter.ts"
+      - "packages/core/src/git/types.ts"
+
+  - doc: "docs/hashing-and-timestamps.md"
+    source:
+      - "packages/core/src/analysis/hasher.ts"
+      - "packages/core/src/analysis/timestamp.ts"
+
+  - doc: "docs/coverage-analysis.md"
+    source:
+      - "packages/core/src/coverage/analyzer.ts"
+      - "packages/core/src/coverage/languages.ts"
+      - "packages/core/src/coverage/types.ts"
+
+  # Group 3: User Interfaces
+  - doc: "docs/cli-reference.md"
+    source:
+      - "apps/cli/src/index.ts"
+      - "apps/cli/src/commands.ts"
+      - "apps/cli/src/view.ts"
+
+  - doc: "docs/github-action.md"
+    source:
+      - "apps/action/action.yml"
+      - "apps/action/src/index.ts"
+
+  # Group 4: Developer Guide
+  - doc: "CONTRIBUTING.md"
+    source:
+      - "CONTRIBUTING.md"
+      - "pnpm-workspace.yaml"
+
+  - doc: "docs/releasing.md"
+    source:
+      - "docs/releasing.md"
+      - ".github/workflows/release.yml"
+
+  - doc: "docs/testing.md"
+    source:
+      - "vitest.workspace.ts"
+      - "vitest.config.ts"
+      - "packages/core/tests/**/*"
+      - "apps/cli/tests/**/*"
+      - "apps/action/tests/**/*"
+
+  - doc: "docs/build-config.md"
+    source:
+      - "packages/core/tsconfig.build.json"
+      - "apps/cli/tsup.config.ts"
+      - "tsconfig.base.json"
