@@ -18,4 +18,4 @@ This ensures that formatting changes, comment updates, or refactors that don't c
 We use `createHash('sha256')` to generate the final hex digest of the cleaned content.
 
 ## Timestamps
-The timestamp analysis (though partly covered in drift detection) relies on fetching the `effective` update time, which is the date of the last *meaningful* commit.
+The timestamp analysis relies on `getEffectiveFileUpdate` in `packages/core/src/analysis/timestamp.ts`. This function determines the last "meaningful" commit date for a file, filtering out noise based on the configuration.

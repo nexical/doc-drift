@@ -17,12 +17,13 @@ The `parseRepomixOutput` method mimics a simple parser (or uses Repomix's struct
 - `type`
 - `const` / `let` / `var`
 
-It is robust enough to strip modifiers like `export`, `async`, or `static` to get the raw name.
+It is robust enough to strip modifiers like `export`, `async`, or `static` to get the raw name. It uses regex patterns like `methodRegex` to identify methods.
 
 ### 3. Verification
 For every source file, `CoverageAnalyzer` compares the extracted entities against the `docContent`.
 - It normalizes the documentation to lowercase.
 - It performs a whole-word regex search for each entity name.
+- It uses helper functions like `escapeRegExp` to ensure safe regex matching.
 - It produces a `CoverageReport` listing `present` and `missing` entities, and calculates a `score`.
 
 ## Types
