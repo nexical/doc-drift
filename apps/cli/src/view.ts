@@ -30,7 +30,12 @@ function renderListView(results: FileCheckResult[], root: string) {
         const relativeDoc = path.relative(root, res.docPath);
 
         // Format sources with indentation for new lines
-        const sourcesList = res.sourceFiles.map(s => path.relative(root, s));
+        const sourcesList = res.sourceFiles.map(s => {
+            const rel = path.relative(root, s);
+            const isDrifting = res.driftingSources?.some(d => d.sourceFile === s);
+            return isDrifting ? pc.red(rel) : pc.gray(rel);
+        });
+
         const relativeSources = sourcesList.length > 0
             ? sourcesList.join('\n           ') // Align with "Source: " (8 chars + 3 spaces)
             : pc.italic('None');
@@ -51,7 +56,14 @@ function renderListView(results: FileCheckResult[], root: string) {
 
         console.log(`${statusIcon} ${pc.bold(statusText)}  ${pc.bold(pc.cyan(relativeDoc))}`);
         console.log(`   ${pc.dim('Source:')} ${relativeSources}`);
-        if (res.driftReason) {
+
+        if (res.driftingSources && res.driftingSources.length > 0) {
+            console.log(`   ${pc.dim('Details:')}`);
+            res.driftingSources.forEach(d => {
+                const rel = path.relative(root, d.sourceFile);
+                console.log(`           ${pc.red(rel)}: ${pc.yellow(d.reason)}`);
+            });
+        } else if (res.driftReason) {
             console.log(`   ${pc.dim('Reason:')} ${pc.yellow(res.driftReason)}`);
         }
         console.log(pc.dim('─'.repeat(50)));
@@ -76,13 +88,28 @@ function renderTableView(results: FileCheckResult[], root: string) {
         }
 
         const relativeDoc = path.relative(root, res.docPath);
-        const relativeSources = res.sourceFiles.map(s => path.relative(root, s)).join('\n');
+
+        const relativeSources = res.sourceFiles.map(s => {
+            const rel = path.relative(root, s);
+            const isDrifting = res.driftingSources?.some(d => d.sourceFile === s);
+            return isDrifting ? pc.red(rel) : pc.gray(rel);
+        }).join('\n');
+
+        let reasonContent = '';
+        if (res.driftingSources && res.driftingSources.length > 0) {
+            reasonContent = res.driftingSources.map(d => {
+                const rel = path.relative(root, d.sourceFile);
+                return `${pc.red(rel)}: ${d.reason}`;
+            }).join('\n');
+        } else if (res.driftReason) {
+            reasonContent = pc.yellow(res.driftReason);
+        }
 
         table.push([
             statusFormatted,
             pc.bold(pc.cyan(relativeDoc)),
-            pc.gray(relativeSources || '-'),
-            res.driftReason ? pc.yellow(res.driftReason) : '',
+            relativeSources || '-',
+            reasonContent,
         ]);
     });
 

@@ -110,7 +110,8 @@ describe('Core Drift Check', () => {
         const result = await checkDrift('doc.md', ['code.ts'], config);
 
         expect(result.status).toBe('STALE_SEMANTIC');
-        expect(result.driftReason).toContain('Semantic change detected');
+        expect(result.driftingSources).toBeDefined();
+        expect(result.driftingSources[0].reason).toBe('Semantic mismatch');
     });
 
     it('Status is STALE_TIMESTAMP if semantic check disabled', async () => {

@@ -17,6 +17,7 @@ export async function checkDrift(
         sourceFiles,
         status: 'FRESH',
         lastDocCommit: t_doc ? { hash: t_doc.hash, date: t_doc.date } : undefined,
+        driftingSources: [],
     };
 
     if (!t_doc) {
@@ -59,27 +60,42 @@ export async function checkDrift(
                     continue;
                 } else {
                     // Mismatch -> STALE_SEMANTIC (Real drift)
-                    result.status = 'STALE_SEMANTIC';
-                    result.lastSourceCommit = {
+                    result.driftingSources.push({
+                        sourceFile,
+                        reason: 'Semantic mismatch',
+                        lastCommit: {
+                            hash: t_code.hash,
+                            date: t_code.date,
+                            message: t_code.message
+                        }
+                    });
+                }
+            } else {
+                // If strict mode is ON or semantic check failed (meaning disabled), report timestamp drift.
+                result.driftingSources.push({
+                    sourceFile,
+                    reason: 'Timestamp mismatch',
+                    lastCommit: {
                         hash: t_code.hash,
                         date: t_code.date,
                         message: t_code.message
-                    };
-                    result.driftReason = `Semantic change detected in ${sourceFile} since ${t_doc.hash}`;
-                    return result;
-                }
+                    }
+                });
             }
-
-            // If strict mode is ON or semantic check failed (meaning disabled), report timestamp drift.
-            result.status = 'STALE_TIMESTAMP';
-            result.lastSourceCommit = {
-                hash: t_code.hash,
-                date: t_code.date,
-                message: t_code.message
-            };
-            result.driftReason = `Source file ${sourceFile} updated after documentation`;
-            return result;
         }
+    }
+
+    // Determine Final Status
+    if (result.driftingSources.length > 0) {
+        // If any file has semantic drift, the whole doc is semantically stale.
+        // Otherwise, if any file has timestamp drift (and no semantic drift logic cleared it or strict mode is on), it's timestamp stale.
+        const hasSemantic = result.driftingSources.some(d => d.reason === 'Semantic mismatch');
+        result.status = hasSemantic ? 'STALE_SEMANTIC' : 'STALE_TIMESTAMP';
+
+        // For backward compatibility (if needed)
+        const first = result.driftingSources[0];
+        result.lastSourceCommit = first.lastCommit;
+        result.driftReason = `${result.driftingSources.length} source file(s) drifting.`;
     }
 
     return result;
