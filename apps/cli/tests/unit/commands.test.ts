@@ -117,12 +117,12 @@ describe('handleCheck', () => {
         // Ensure analyze is a mock
         // Since we mocked @doc-drift/core at top level, CoverageAnalyzer should be a mock.
         // Static methods on the mocked class should also be mocks.
-        vi.mocked(CoverageAnalyzer.analyze).mockResolvedValue({
+        vi.mocked(CoverageAnalyzer.analyze).mockResolvedValue([{
             file: 'code.ts',
             score: 0.5,
             missing: [{ name: 'foo', kind: 'function', line: 1 }],
             present: []
-        });
+        }]);
 
         await handleCheck('/cwd', { coverage: true });
 
@@ -183,12 +183,12 @@ describe('handleCheck', () => {
         vi.mocked(fs.readFile).mockResolvedValue('text');
 
         const { CoverageAnalyzer } = await import('@docgap/core');
-        vi.mocked(CoverageAnalyzer.analyze).mockResolvedValue({
+        vi.mocked(CoverageAnalyzer.analyze).mockResolvedValue([{
             file: 'code.ts',
             score: 0.5,
             missing: [],
             present: [{ name: 'foo', kind: 'function', line: 1 }]
-        });
+        }]);
 
         await handleCheck('/cwd', { coverage: true });
 

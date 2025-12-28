@@ -53,19 +53,15 @@ export async function handleCheck(cwd: string, options: { config?: string; stric
                     continue;
                 }
 
-                for (const sourceFile of res.sourceFiles) {
-                    try {
-                        const report = await CoverageAnalyzer.analyze(sourceFile, docContent);
-                        // Only include if we got a valid score/profile (implied if score > 0 or present/missing exist, 
-                        // but analyzer returns score 0 for no profile. We should probably filter those out or show as N/A?)
-                        // Analyzer returns score 0 and empty missing/present for no profile.
-                        // Let's filter out "empty" reports to avoid cluttering "unknown" files
+                try {
+                    const docReports = await CoverageAnalyzer.analyze(res.sourceFiles, docContent);
+                    for (const report of docReports) {
                         if (report.missing.length > 0 || report.present.length > 0) {
                             reports.push(report);
                         }
-                    } catch (e) {
-                        // Ignore errors in coverage analysis for single file
                     }
+                } catch (e) {
+                    // Ignore errors in coverage analysis
                 }
             }
             spinner.stop();
